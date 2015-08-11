@@ -2,8 +2,8 @@
 C++11 based application base for developing apps.
 
 # Requirements
-1. CMake 3+.
-2. Compiler with support for lambda functions (C++11), such as VS 2013.
+..* CMake 3+.
+..* Compiler with support for lambda functions (C++11), such as VS 2013.
   
 # Instructions
 Put your laboration in the folder titled 'projects'. It must be accompanied with its own CMakeLists.txt which is used to generate a project. Then run CMake in the root of the project, there should be a target in your project matching the name of your lab.
