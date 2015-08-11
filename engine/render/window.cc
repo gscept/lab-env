@@ -168,6 +168,7 @@ Window::Open()
 	glfwWindowHint(GLFW_GREEN_BITS, 8);
 	glfwWindowHint(GLFW_BLUE_BITS, 8);
 	glfwWindowHint(GLFW_SRGB_CAPABLE, GL_TRUE);
+	glfwWindowHint(GLFW_SAMPLES, 8);
 
 	// open window
 	this->window = glfwCreateWindow(this->width, this->height, this->title.c_str(), nullptr, nullptr);
@@ -196,6 +197,7 @@ Window::Open()
 		glEnable(GL_FRAMEBUFFER_SRGB);
 		glEnable(GL_LINE_SMOOTH);
 		glEnable(GL_POLYGON_SMOOTH);
+		glEnable(GL_MULTISAMPLE);
 		glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
 		glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
 
