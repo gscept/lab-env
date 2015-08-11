@@ -2,7 +2,8 @@
 C++11 based application base for developing apps.
 
 # Requirements
-CMake 3+
+CMake 3+.
+
 Compiler with support for lambda functions (C++11), such as VS 2013.
   
 # Instructions
