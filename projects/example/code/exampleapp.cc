@@ -4,6 +4,7 @@
 //------------------------------------------------------------------------------
 #include "config.h"
 #include "exampleapp.h"
+#include <cstring>
 
 const GLchar* vs =
 "#version 430\n"
@@ -75,7 +76,7 @@ ExampleApp::Open()
 
 		// setup vertex shader
 		this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		GLint length = strlen(vs);
+		GLint length = std::strlen(vs);
 		glShaderSource(this->vertexShader, 1, &vs, &length);
 		glCompileShader(this->vertexShader);
 
@@ -92,7 +93,7 @@ ExampleApp::Open()
 
 		// setup pixel shader
 		this->pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-		length = strlen(ps);
+		length = std::strlen(ps);
 		glShaderSource(this->pixelShader, 1, &ps, &length);
 		glCompileShader(this->pixelShader);
 
