@@ -5,7 +5,7 @@
 #include "config.h"
 #include "exampleapp.h"
 
-int __cdecl
+int
 main(int argc, const char** argv)
 {
 	Example::ExampleApp app;
