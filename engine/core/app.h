@@ -1,9 +1,10 @@
+#pragma once
 //------------------------------------------------------------------------------
 /**
 	Base class for applications, override this class
 	and use it as an entry point for your lab.
 	
-	(C) 2015 Individual contributors, see AUTHORS file
+	(C) 2015-2016 Individual contributors, see AUTHORS file
 */
 //------------------------------------------------------------------------------
 #include <GL/glew.h>
