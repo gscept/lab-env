@@ -9,6 +9,7 @@
 #include <functional>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+#include <nanovg.h>
 
 namespace Display
 {
@@ -51,6 +52,11 @@ public:
 	/// set mouse scroll function callback
 	void SetMouseScrollFunction(const std::function<void(float64, float64)>& func);
 
+	/// set optional UI render function
+	void SetUiRender(const std::function<void()>& func);
+	/// set optional nanovg render function
+	void SetNanoVGRender(const std::function<void(NVGcontext *)> & func);
+
 private:
 
 	/// static key press callback
@@ -79,14 +85,19 @@ private:
 	std::function<void(float64, float64)> mouseMoveCallback;
 	/// function for mouse enter/leave callbacks
 	std::function<void(bool)> mouseLeaveEnterCallback;
-	/// function for mose scroll callbacks
+	/// function for mouse scroll callbacks
 	std::function<void(float64, float64)> mouseScrollCallback;
+	/// function for ui rendering callback
+	std::function<void()> uiFunc;
+	/// function for nanovg rendering callback
+	std::function<void(NVGcontext *)> nanoFunc;
+
 
 	int32 width;
 	int32 height;
 	std::string title;
-
 	GLFWwindow* window;
+	NVGcontext * vg;
 };
 
 //------------------------------------------------------------------------------
@@ -163,5 +174,26 @@ Window::SetMouseScrollFunction(const std::function<void(float64, float64)>& func
 {
 	this->mouseScrollCallback = func;
 }
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Window::SetUiRender(const std::function<void()>& func)
+{
+	this->uiFunc = func;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Window::SetNanoVGRender(const std::function<void(NVGcontext *)> & func)
+{
+	this->nanoFunc = func;
+}
+
+
+
 
 } // namespace Display

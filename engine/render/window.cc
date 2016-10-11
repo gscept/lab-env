@@ -4,6 +4,11 @@
 //------------------------------------------------------------------------------
 #include "config.h"
 #include "window.h"
+#include <imgui.h>
+#include "imgui_impl_glfw_gl3.h"
+#include <nanovg.h>
+#define NANOVG_GL3_IMPLEMENTATION 1
+#include "nanovg_gl.h"
 
 namespace Display
 {
@@ -60,6 +65,7 @@ int32 Window::WindowCount = 0;
 */
 Window::Window() :
 	window(nullptr),
+	vg(nullptr),
 	width(1024),
 	height(768),
 	title("gscept Lab Environment")
@@ -82,7 +88,11 @@ void
 Window::StaticKeyPressCallback(GLFWwindow* win, int32 key, int32 scancode, int32 action, int32 mods)
 {
 	Window* window = (Window*)glfwGetWindowUserPointer(win);
-	if (nullptr != window->keyPressCallback) window->keyPressCallback(key, scancode, action, mods);
+	if (ImGui::IsMouseHoveringAnyWindow())
+	{
+		ImGui_ImplGlfwGL3_KeyCallback(win, key, scancode, action, mods);
+	}
+	else if (nullptr != window->keyPressCallback) window->keyPressCallback(key, scancode, action, mods);
 }
 
 //------------------------------------------------------------------------------
@@ -92,7 +102,11 @@ void
 Window::StaticMousePressCallback(GLFWwindow* win, int32 button, int32 action, int32 mods)
 {
 	Window* window = (Window*)glfwGetWindowUserPointer(win);
-	if (nullptr != window->mousePressCallback) window->mousePressCallback(button, action, mods);
+	if (ImGui::IsMouseHoveringAnyWindow())
+	{
+		ImGui_ImplGlfwGL3_MouseButtonCallback(win, button, action, mods);
+	}
+	else if (nullptr != window->mousePressCallback) window->mousePressCallback(button, action, mods);
 }
 
 //------------------------------------------------------------------------------
@@ -122,7 +136,11 @@ void
 Window::StaticMouseScrollCallback(GLFWwindow* win, float64 x, float64 y)
 {
 	Window* window = (Window*)glfwGetWindowUserPointer(win);
-	if (nullptr != window->mouseScrollCallback) window->mouseScrollCallback(x, y);
+	if (ImGui::IsMouseHoveringAnyWindow())
+	{
+		ImGui_ImplGlfwGL3_ScrollCallback(win, x, y);
+	}
+	else if (nullptr != window->mouseScrollCallback) window->mouseScrollCallback(x, y);
 }
 
 //------------------------------------------------------------------------------
@@ -204,12 +222,20 @@ Window::Open()
 		// setup viewport
 		glViewport(0, 0, this->width, this->height);
 	}
+
+
 	glfwSetWindowUserPointer(this->window, this);
 	glfwSetKeyCallback(this->window, Window::StaticKeyPressCallback);
 	glfwSetMouseButtonCallback(this->window, Window::StaticMousePressCallback);
 	glfwSetCursorPosCallback(this->window, Window::StaticMouseMoveCallback);
 	glfwSetCursorEnterCallback(this->window, Window::StaticMouseEnterLeaveCallback);
 	glfwSetScrollCallback(this->window, Window::StaticMouseScrollCallback);
+	// setup imgui implementation
+	ImGui_ImplGlfwGL3_Init(this->window, false);
+	glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
+
+	// setup nanovg
+	this->vg = nvgCreateGL3(NVG_ANTIALIAS | NVG_STENCIL_STROKES);
 
 	// increase window count and return result
 	Window::WindowCount++;
@@ -227,6 +253,7 @@ Window::Close()
 	Window::WindowCount--;
 	if (Window::WindowCount == 0)
 	{
+		ImGui_ImplGlfwGL3_Shutdown();
 		glfwTerminate();
 	}
 }
@@ -246,7 +273,7 @@ Window::MakeCurrent()
 void
 Window::Update()
 {
-	glfwPollEvents();
+	glfwPollEvents();	
 }
 
 //------------------------------------------------------------------------------
@@ -255,7 +282,26 @@ Window::Update()
 void
 Window::SwapBuffers()
 {
-	glfwSwapBuffers(this->window);
+	if (this->window)
+	{
+		if (nullptr != this->nanoFunc)
+		{
+			int32 fbWidth, fbHeight;
+			glClear(GL_STENCIL_BUFFER_BIT);
+			glfwGetWindowSize(this->window, &this->width, &this->height);
+			glfwGetFramebufferSize(window, &fbWidth, &fbHeight);
+			nvgBeginFrame(this->vg, this->width, this->height, (float)fbWidth / (float) this->width);
+			this->nanoFunc(this->vg);
+			nvgEndFrame(this->vg);
+		}
+		if (nullptr != this->uiFunc)
+		{
+			ImGui_ImplGlfwGL3_NewFrame();
+			this->uiFunc();
+			ImGui::Render();
+		}
+		glfwSwapBuffers(this->window);
+	}
 }
 
 } // namespace Display
