@@ -2,7 +2,6 @@
 # example project
 #--------------------------------------------------------------------------
 
-PROJECT(example)
 FILE(GLOB example_headers code/*.h)
 FILE(GLOB example_sources code/*.cc)
 

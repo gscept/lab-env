@@ -33,11 +33,6 @@ typedef uint8_t		ubyte;
 typedef float		float32;
 typedef double		float64;
 
-// hmm, this is questionable, we actually want SSE vectors to operate as classes
-typedef __m128		vec4;
-typedef __m128i		ivec4;
-typedef __m128d		dvec4;
-
 #define j_min(x, y) x < y ? x : y
 #define j_max(x, y) x > y ? x : y
 

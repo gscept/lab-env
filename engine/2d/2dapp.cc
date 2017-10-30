@@ -67,7 +67,7 @@ BaseApp::Open()
 
 		// setup vertex shader
 		this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		GLint length = std::strlen(vs);
+		GLint length = (GLint)std::strlen(vs);
 		glShaderSource(this->vertexShader, 1, &vs, &length);
 		glCompileShader(this->vertexShader);
 
@@ -84,7 +84,7 @@ BaseApp::Open()
 
 		// setup pixel shader
 		this->pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-		length = std::strlen(ps);
+		length = (GLint)std::strlen(ps);
 		glShaderSource(this->pixelShader, 1, &ps, &length);
 		glCompileShader(this->pixelShader);
 
@@ -159,7 +159,7 @@ BaseApp::Run()
 			glEnableVertexAttribArray(1);
 			glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(LineData) >> 1, NULL);
 			glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(LineData) >> 1, (GLvoid*)(sizeof(float) * 2));
-			glDrawArrays(GL_LINES, 0, this->vertices.size()<<1);
+			glDrawArrays(GL_LINES, 0, GLsizei(this->vertices.size()<<1));
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			this->vertices.clear();
 		}		

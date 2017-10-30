@@ -1,0 +1,42 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Core">
+      <UniqueIdentifier>{6c4bc156-8d1e-4aa4-ba54-7bc578c30678}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Render">
+      <UniqueIdentifier>{484178d4-73d1-4f8b-8109-919cf08330bf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="App2D">
+      <UniqueIdentifier>{e3aae8bd-3447-4411-b0b0-fbb8e4ac4678}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\engine\core\app.cc">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\render\window.cc">
+      <Filter>Render</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\config.cc">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\engine\2d\2dapp.cc">
+      <Filter>App2D</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\engine\core\app.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\render\window.h">
+      <Filter>Render</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\config.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\engine\2d\2dapp.h">
+      <Filter>App2D</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
