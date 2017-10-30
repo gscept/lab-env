@@ -13,9 +13,9 @@ SET(GLFW_BUILD_TESTS OFF CACHE BOOL "Build the GLFW test programs")
 SET(GLFW_BUILD_DOCS OFF CACHE BOOL "Build the GLFW documentation")
 SET(GLFW_INSTALL OFF CACHE BOOL "Generate installation target")		  
 
-ADD_SUBDIRECTORY(glfw-3.1.1)
+ADD_SUBDIRECTORY(glfw)
 SET_TARGET_PROPERTIES(glfw PROPERTIES FOLDER "exts/glfw")
-TARGET_INCLUDE_DIRECTORIES(exts INTERFACE glfw-3.1.1/include)
+TARGET_INCLUDE_DIRECTORIES(exts INTERFACE glfw/include)
 
 ADD_LIBRARY(nanovg STATIC nanovg/src/nanovg.c nanovg/src/nanovg.h nanovg/src/nanovg_gl.h nanovg/src/nanovg_gl_utils.h)
 TARGET_LINK_LIBRARIES(nanovg PUBLIC exts)

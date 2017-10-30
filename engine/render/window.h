@@ -3,7 +3,7 @@
 /**
 	Manages the opening and closing of a window.
 	
-	(C) 2015-2016 Individual contributors, see AUTHORS file
+	(C) 2015-2017 Individual contributors, see AUTHORS file
 */
 //------------------------------------------------------------------------------
 #include <functional>
@@ -25,6 +25,8 @@ public:
 	void SetSize(int32 width, int32 height);
 	/// set title of window
 	void SetTitle(const std::string& title);
+	/// get size
+	void GetSize(int32 & width, int32 & height);
 
 	/// open window
 	bool Open();
@@ -56,6 +58,8 @@ public:
 	void SetUiRender(const std::function<void()>& func);
 	/// set optional nanovg render function
 	void SetNanoVGRender(const std::function<void(NVGcontext *)> & func);
+	/// access to nanovg context for setup
+	NVGcontext* GetNanoVG();
 
 private:
 
@@ -111,6 +115,15 @@ Window::SetSize(int32 width, int32 height)
 	if (nullptr != this->window) this->Resize();
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline void
+Window::GetSize(int32 & width, int32 & height)
+{
+	width = this->width;
+	height = this->height;	
+}
 //------------------------------------------------------------------------------
 /**
 */
@@ -193,6 +206,14 @@ Window::SetNanoVGRender(const std::function<void(NVGcontext *)> & func)
 	this->nanoFunc = func;
 }
 
+//------------------------------------------------------------------------------
+/**
+*/
+inline NVGcontext*
+Window::GetNanoVG()
+{
+	return this->vg;
+}
 
 
 

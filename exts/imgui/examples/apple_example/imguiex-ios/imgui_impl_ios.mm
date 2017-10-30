@@ -3,6 +3,9 @@
 // Providing a standalone iOS application with Synergy integration makes this sample more verbose than others. It also hasn't been tested as much.
 // Refer to other examples to get an easier understanding of how to integrate ImGui into your existing application.
 
+// TODO:
+// - Clipboard is not supported.
+
 #import <OpenGLES/ES3/gl.h>
 #import <OpenGLES/ES3/glext.h>
 
@@ -287,7 +290,6 @@ void ImGui_ClipboardCallback(uSynergyCookie cookie, enum uSynergyClipboardFormat
 {
     printf("Synergy: clipboard callback TODO\n" );
 }
-
 
 @interface ImGuiHelper ()
 {
@@ -615,6 +617,7 @@ void ImGui_ClipboardCallback(uSynergyCookie cookie, enum uSynergyClipboardFormat
 static void ImGui_ImplIOS_RenderDrawLists (ImDrawData *draw_data)
 {
     // Setup render state: alpha-blending enabled, no face culling, no depth testing, scissor enabled
+	// FIXME: Backport changes from imgui_impl_glfw_gl3.cpp
     GLint last_program, last_texture;
     glGetIntegerv(GL_CURRENT_PROGRAM, &last_program);
     glGetIntegerv(GL_TEXTURE_BINDING_2D, &last_texture);

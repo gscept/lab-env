@@ -3,7 +3,7 @@
 /**
 	2D Application class
 	
-	(C) 2015 Individual contributors, see AUTHORS file
+	(C) 2015-2017 Individual contributors, see AUTHORS file
 */
 //------------------------------------------------------------------------------
 #include "core/app.h"
@@ -38,6 +38,21 @@ public:
 		{
 			// empty
 		};
+		Colour(float r, float g, float b)
+		{
+			this->r = r;
+			this->g = g;
+			this->b = b;
+		}
+		operator NVGcolor() const
+		{
+			NVGcolor c;
+			c.r = r;
+			c.g = g;
+			c.b = b;
+			c.a = 1.0f;
+			return c;
+		}
 	};
 
 	struct LineData
@@ -48,17 +63,33 @@ public:
 		Colour c2;
 	};
 
-	/// 
+	/// draws a line as defined in the LineData struct
 	void AddLine(const LineData & data);
+	/// print text at location
+	void PrintText(const char * msg, float x, float y);
+	/// print text at location with size and colour
+	void PrintText(const char * msg, float x, float y, float size, const Colour & colour);
 
 private:
+	/// renders the collected text 
+	void RenderNanoVG(NVGcontext * vg);
 
+	struct TextRow
+	{
+		std::string msg;
+		float x, y;
+		float size;
+		Colour colour;		
+	};
+	
 	GLuint program;
 	GLuint vertexShader;
 	GLuint pixelShader;
 	GLuint vertexBufferObject;
+	int nvFont;
 	Display::Window* window;
 	std::vector<LineData> vertices;	
+	std::vector<TextRow> texts;
 };
 
 

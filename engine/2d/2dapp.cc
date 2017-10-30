@@ -1,10 +1,11 @@
 //------------------------------------------------------------------------------
 // 2dapp.cc
-// (C) 2015 Individual contributors, see AUTHORS file
+// (C) 2015-2017 Individual contributors, see AUTHORS file
 //------------------------------------------------------------------------------
 #include "config.h"
 #include "2dapp.h"
 #include <cstring>
+#include "fontstash.h"
 
 const GLchar* vs =
 "#version 420\n"
@@ -114,9 +115,22 @@ BaseApp::Open()
 
 		// setup vbo
 		glGenBuffers(1, &this->vertexBufferObject);
-		return true;
+
+		// setup nanovg
+		NVGcontext* vg = this->window->GetNanoVG();
+		this->nvFont = nvgCreateFont(vg, "sans", "../exts/nanovg/example/Roboto-Regular.ttf");
+		if (this->nvFont == FONS_INVALID)
+		{
+			printf("Failed to load font, no text rendering will be available\n");
+		}
+		this->window->SetNanoVGRender([this](NVGcontext * vg)
+		{
+			this->RenderNanoVG(vg);
+		});
 
 		this->Setup();
+		return true;		
+		
 	}
 	return false;
 }
@@ -161,5 +175,44 @@ BaseApp::AddLine( const LineData & data )
 {	
 	this->vertices.push_back(data);
 }
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BaseApp::RenderNanoVG(NVGcontext * vg)
+{
+	int32 w, h;	
+	this->window->GetSize(w, h);
+
+	nvgFontFace(vg, "sans");	
+	for (const TextRow & row : this->texts)
+	{
+		nvgFontSize(vg, row.size);
+		nvgFillColor(vg, NVGcolor(row.colour));
+		nvgText(vg, row.x*w, row.y*h, row.msg.c_str(), NULL);
+	}
+	this->texts.clear();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BaseApp::PrintText(const char * msg, float x, float y)
+{
+	this->PrintText(msg, x, y, 18.0f, Colour(0.0f, 0.0f, 0.0f));		
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+BaseApp::PrintText(const char * msg, float x, float y, float size, const Colour & colour)
+{
+	TextRow row = { msg, x, y, size, colour };
+	this->texts.push_back(row);
+}
+
 
 } // namespace App2D
