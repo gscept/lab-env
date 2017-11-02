@@ -207,9 +207,13 @@ Window::Open()
 		// setup debug callback
 		glEnable(GL_DEBUG_OUTPUT);
 		glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-		glDebugMessageCallback(GLDebugCallback, NULL);
-		GLuint unusedIds;
-		glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, &unusedIds, true);
+		// check if debug functions are available
+		if(glDebugMessageCallback)
+		{
+			glDebugMessageCallback(GLDebugCallback, NULL);
+			GLuint unusedIds;
+			glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, &unusedIds, true);
+		}
 
 		// setup stuff
 		glEnable(GL_FRAMEBUFFER_SRGB);
