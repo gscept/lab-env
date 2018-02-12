@@ -1,6 +1,6 @@
 //------------------------------------------------------------------------------
 // window.cc
-// (C) 2015-2016 Individual contributors, see AUTHORS file
+// (C) 2015-2018 Individual contributors, see AUTHORS file
 //------------------------------------------------------------------------------
 #include "config.h"
 #include "window.h"
@@ -231,6 +231,7 @@ Window::Open()
 	glfwSetCursorEnterCallback(this->window, Window::StaticMouseEnterLeaveCallback);
 	glfwSetScrollCallback(this->window, Window::StaticMouseScrollCallback);
 	// setup imgui implementation
+    ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(this->window, false);
 	glfwSetCharCallback(window, ImGui_ImplGlfwGL3_CharCallback);
 

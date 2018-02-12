@@ -4,7 +4,7 @@
     
 	Main configure file for types and OS-specific stuff.
 	
-	(C) 2015 See the LICENSE file.
+	(C) 2015-2018 See the LICENSE file.
 */
 #ifdef __WIN32__
 #include "win32/pch.h"
