@@ -1,5 +1,7 @@
 // ImGui Marmalade binding with IwGx
-// In this binding, ImTextureID is used to store a 'CIwTexture*' texture identifier. Read the FAQ about ImTextureID in imgui.cpp.
+
+// Implemented features:
+//  [X] User texture binding. Use 'CIwTexture*' as ImTextureID. Read the FAQ about ImTextureID in imgui.cpp.
 
 // You can copy and use unmodified imgui_impl_* files in your project. See main.cpp for an example of using this.
 // If you use this binding you'll need to call 4 functions: ImGui_ImplXXXX_Init(), ImGui_ImplXXXX_NewFrame(), ImGui::Render() and ImGui_ImplXXXX_Shutdown().
@@ -9,7 +11,7 @@
 // Copyright (C) 2015 by Giovanni Zito
 // This file is part of ImGui
 
-#include <imgui.h>
+#include "imgui.h"
 #include "imgui_impl_marmalade.h"
 
 #include <s3eClipboard.h>
@@ -21,13 +23,12 @@
 // Data
 static double       g_Time = 0.0f;
 static bool         g_MousePressed[3] = { false, false, false };
-static float        g_MouseWheel = 0.0f;
 static CIwTexture*  g_FontTexture = NULL;
 static char*        g_ClipboardText = NULL;
 static bool         g_osdKeyboardEnabled = false;
 
 // use this setting to scale the interface - e.g. on device you could use 2 or 3 scale factor
-static ImVec2       g_scale = ImVec2(1.0f,1.0f);
+static ImVec2       g_RenderScale = ImVec2(1.0f,1.0f);
 
 // This is the main rendering function that you have to implement and provide to ImGui (via setting up 'RenderDrawListsFn' in the ImGuiIO structure)
 void ImGui_Marmalade_RenderDrawLists(ImDrawData* draw_data)
@@ -48,9 +49,9 @@ void ImGui_Marmalade_RenderDrawLists(ImDrawData* draw_data)
 
         for( int i=0; i < nVert; i++ )
         {
-            // TODO: optimize multiplication on gpu using vertex shader
-            pVertStream[i].x = cmd_list->VtxBuffer[i].pos.x * g_scale.x;
-            pVertStream[i].y = cmd_list->VtxBuffer[i].pos.y * g_scale.y;
+            // TODO: optimize multiplication on gpu using vertex shader/projection matrix.
+            pVertStream[i].x = cmd_list->VtxBuffer[i].pos.x * g_RenderScale.x;
+            pVertStream[i].y = cmd_list->VtxBuffer[i].pos.y * g_RenderScale.y;
             pUVStream[i].x = cmd_list->VtxBuffer[i].uv.x;
             pUVStream[i].y = cmd_list->VtxBuffer[i].uv.y;
             pColStream[i] = cmd_list->VtxBuffer[i].col;
@@ -89,28 +90,24 @@ void ImGui_Marmalade_RenderDrawLists(ImDrawData* draw_data)
     // TODO: restore modified state (i.e. mvp matrix)
 }
 
-static const char* ImGui_Marmalade_GetClipboardText()
+static const char* ImGui_Marmalade_GetClipboardText(void* /*user_data*/)
 {
-    if (s3eClipboardAvailable())
+    if (!s3eClipboardAvailable())
+        return NULL;
+
+    if (int size = s3eClipboardGetText(NULL, 0))
     {
-        int size = s3eClipboardGetText(NULL, 0);
-        if (size > 0)
-        {
-            if (g_ClipboardText)
-            {
-                delete[] g_ClipboardText;
-                g_ClipboardText = NULL;
-            }
-            g_ClipboardText = new char[size];
-            g_ClipboardText[0] = '\0';
-            s3eClipboardGetText(g_ClipboardText, size);
-        }
+        if (g_ClipboardText)
+            delete[] g_ClipboardText;
+        g_ClipboardText = new char[size];
+        g_ClipboardText[0] = '\0';
+        s3eClipboardGetText(g_ClipboardText, size);
     }
 
     return g_ClipboardText;
 }
 
-static void ImGui_Marmalade_SetClipboardText(const char* text)
+static void ImGui_Marmalade_SetClipboardText(void* /*user_data*/, const char* text)
 {
     if (s3eClipboardAvailable())
         s3eClipboardSetText(text);
@@ -132,9 +129,9 @@ int32 ImGui_Marmalade_PointerButtonEventCallback(void* SystemData, void* pUserDa
         if (pEvent->m_Button == S3E_POINTER_BUTTON_MIDDLEMOUSE)
             g_MousePressed[2] = true;
         if (pEvent->m_Button == S3E_POINTER_BUTTON_MOUSEWHEELUP)
-            g_MouseWheel += pEvent->m_y;
+            io.MouseWheel += pEvent->m_y;
         if (pEvent->m_Button == S3E_POINTER_BUTTON_MOUSEWHEELDOWN)
-            g_MouseWheel += pEvent->m_y;
+            io.MouseWheel += pEvent->m_y;
     }
 
     return 0;
@@ -212,8 +209,6 @@ void    ImGui_Marmalade_InvalidateDeviceObjects()
 
 bool    ImGui_Marmalade_Init(bool install_callbacks)
 {
-    IwGxInit();
-
     ImGuiIO& io = ImGui::GetIO();
     io.KeyMap[ImGuiKey_Tab] = s3eKeyTab;                     // Keyboard mapping. ImGui will use those indices to peek into the io.KeyDown[] array.
     io.KeyMap[ImGuiKey_LeftArrow] = s3eKeyLeft;
@@ -224,8 +219,10 @@ bool    ImGui_Marmalade_Init(bool install_callbacks)
     io.KeyMap[ImGuiKey_PageDown] = s3eKeyPageDown;
     io.KeyMap[ImGuiKey_Home] = s3eKeyHome;
     io.KeyMap[ImGuiKey_End] = s3eKeyEnd;
+    io.KeyMap[ImGuiKey_Insert] = s3eKeyInsert;
     io.KeyMap[ImGuiKey_Delete] = s3eKeyDelete;
     io.KeyMap[ImGuiKey_Backspace] = s3eKeyBackspace;
+    io.KeyMap[ImGuiKey_Space] = s3eKeySpace;
     io.KeyMap[ImGuiKey_Enter] = s3eKeyEnter;
     io.KeyMap[ImGuiKey_Escape] = s3eKeyEsc;
     io.KeyMap[ImGuiKey_A] = s3eKeyA;
@@ -252,8 +249,6 @@ bool    ImGui_Marmalade_Init(bool install_callbacks)
 void ImGui_Marmalade_Shutdown()
 {
     ImGui_Marmalade_InvalidateDeviceObjects();
-    ImGui::Shutdown();
-    IwGxTerminate();
 }
 
 void ImGui_Marmalade_NewFrame()
@@ -277,7 +272,7 @@ void ImGui_Marmalade_NewFrame()
     double mouse_x, mouse_y;
     mouse_x = s3ePointerGetX();
     mouse_y = s3ePointerGetY();
-    io.MousePos = ImVec2((float)mouse_x/g_scale.x, (float)mouse_y/g_scale.y);   // Mouse position in screen coordinates (set to -1,-1 if no mouse / on another screen, etc.)
+    io.MousePos = ImVec2((float)mouse_x/g_scale.x, (float)mouse_y/g_scale.y);   // Mouse position (set to -FLT_MAX,-FLT_MAX if no mouse / on another screen, etc.)
 
     for (int i = 0; i < 3; i++)
     {
@@ -285,13 +280,10 @@ void ImGui_Marmalade_NewFrame()
         g_MousePressed[i] = false;
     }
 
-    io.MouseWheel = g_MouseWheel;
-    g_MouseWheel = 0.0f;
-
     // TODO: Hide OS mouse cursor if ImGui is drawing it
     // s3ePointerSetInt(S3E_POINTER_HIDE_CURSOR,(io.MouseDrawCursor ? 0 : 1));
 
-    // Start the frame
+    // Start the frame. This call will update the io.WantCaptureMouse, io.WantCaptureKeyboard flag that you can use to dispatch inputs (or not) to your application.
     ImGui::NewFrame();
 
      // Show/hide OSD keyboard

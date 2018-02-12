@@ -1,17 +1,21 @@
 #
 # Cross Platform Makefile
-# Compatible with Ubuntu 14.04.1 and Mac OS X
+# Compatible with MSYS2/MINGW, Ubuntu 14.04.1 and Mac OS X
 #
-#
-# if you using Mac OS X:
-# You'll need glfw
-#    http://www.glfw.org
+# You will need GLFW (http://www.glfw.org):
+# Linux:
+#   apt-get install libglfw-dev
+# Mac OS X:
+#   brew install glfw
+# MSYS2:
+#   pacman -S --noconfirm --needed mingw-w64-x86_64-toolchain mingw-w64-x86_64-glfw
 #
 
 #CXX = g++
+#CXX = clang++
 
 EXE = opengl2_example
-OBJS = main.o imgui_impl_glfw.o
+OBJS = main.o imgui_impl_glfw_gl2.o
 OBJS += ../../imgui.o ../../imgui_demo.o ../../imgui_draw.o
 
 UNAME_S := $(shell uname -s)
@@ -29,15 +33,15 @@ endif
 ifeq ($(UNAME_S), Darwin) #APPLE
 	ECHO_MESSAGE = "Mac OS X"
 	LIBS = -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-	LIBS += -L/usr/local/lib -lglfw3
+	#LIBS += -L/usr/local/lib -lglfw3
+	LIBS += -L/usr/local/lib -lglfw
 
 	CXXFLAGS = -I../../ -I/usr/local/include
 	CXXFLAGS += -Wall -Wformat
-#	CXXFLAGS += -D__APPLE__
 	CFLAGS = $(CXXFLAGS)
 endif
 
-ifeq ($(UNAME_S), MINGW64_NT-6.3)
+ifeq ($(findstring MINGW,$(UNAME_S)),MINGW)
    ECHO_MESSAGE = "Windows"
    LIBS = -lglfw3 -lgdi32 -lopengl32 -limm32
 
@@ -45,6 +49,7 @@ ifeq ($(UNAME_S), MINGW64_NT-6.3)
    CXXFLAGS += -Wall -Wformat
    CFLAGS = $(CXXFLAGS)
 endif
+
 
 .cpp.o:
 	$(CXX) $(CXXFLAGS) -c -o $@ $<
