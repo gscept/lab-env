@@ -201,7 +201,7 @@ ImGuiExampleApp::CompileShaders()
 
 	// setup vertex shader
 	this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	GLint length = std::strlen(this->vsBuffer);
+	GLint length = static_cast<GLint>(std::strlen(this->vsBuffer));
 	glShaderSource(this->vertexShader, 1, &this->vsBuffer, &length);
 	glCompileShader(this->vertexShader);
 
@@ -219,7 +219,7 @@ ImGuiExampleApp::CompileShaders()
 
 	// setup pixel shader
 	this->pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-	length = std::strlen(this->fsBuffer);
+	length = static_cast<GLint>(std::strlen(this->fsBuffer));
 	glShaderSource(this->pixelShader, 1, &this->fsBuffer, &length);
 	glCompileShader(this->pixelShader);
 

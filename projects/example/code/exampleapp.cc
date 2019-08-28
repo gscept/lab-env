@@ -76,7 +76,7 @@ ExampleApp::Open()
 
 		// setup vertex shader
 		this->vertexShader = glCreateShader(GL_VERTEX_SHADER);
-		GLint length = std::strlen(vs);
+		GLint length = static_cast<GLint>(std::strlen(vs));
 		glShaderSource(this->vertexShader, 1, &vs, &length);
 		glCompileShader(this->vertexShader);
 
@@ -93,7 +93,7 @@ ExampleApp::Open()
 
 		// setup pixel shader
 		this->pixelShader = glCreateShader(GL_FRAGMENT_SHADER);
-		length = std::strlen(ps);
+		length = static_cast<GLint>(std::strlen(ps));
 		glShaderSource(this->pixelShader, 1, &ps, &length);
 		glCompileShader(this->pixelShader);
 
