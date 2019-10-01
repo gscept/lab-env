@@ -7,62 +7,25 @@
 
 namespace Core
 {
-
-//------------------------------------------------------------------------------
-/**
-*/
-App::App() :
-	isOpen(false)
-{
-	// empty
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-App::~App()
-{
-	// empty
-}
-
-
-//------------------------------------------------------------------------------
-/**
-*/
-bool
-App::Open()
-{
-	assert(!this->isOpen);
-	this->isOpen = true;
-	return true;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-App::Run()
-{
-	// override in subclass
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-App::Close()
-{
-	assert(this->isOpen);
-	this->isOpen = false;
-}
-
-//------------------------------------------------------------------------------
-/**
-*/
-void
-App::Exit()
-{
+	App::App() : isOpen(false) { }
 	
-}
+	App::~App() { }
 
-} // namespace Application
+	bool App::Open()
+	{
+		assert(!this->isOpen);
+		this->isOpen = true;
+		return true;
+	}
+	
+	void App::Run() { }
+	
+	void App::Close()
+	{
+		assert(this->isOpen);
+		this->isOpen = false;
+	}
+	
+	void App::Exit() { }
+
+}

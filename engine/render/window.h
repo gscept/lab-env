@@ -25,7 +25,9 @@ public:
 	/// set size of window
 	void SetSize(int32 width, int32 height);
 	/// get size of windows
-	void GetSize(int32 & width, int32 & height);
+	void GetSize(int32 & width, int32 & height) const;
+	float GetHeight() const;
+	float GetWidth() const;
 	/// set title of window
 	void SetTitle(const std::string& title);
 
@@ -34,15 +36,19 @@ public:
 	/// close window
 	void Close();
 	/// returns true if window is open
-	const bool IsOpen() const;
+	bool IsOpen() const;
 
 	/// make this window current, meaning all draws will direct to this window context
-	void MakeCurrent();
+	void MakeCurrent() const;
 
 	/// update a tick
 	void Update();
 	/// swap buffers at end of frame
 	void SwapBuffers();
+	
+	void SetCursorPosition(double x, double  y) const;
+
+	void HideCursor(bool value) const;
 
 	/// set key press function callback
 	void SetKeyPressFunction(const std::function<void(int32, int32, int32, int32)>& func);
@@ -57,6 +63,7 @@ public:
 
 	/// set optional UI render function
 	void SetUiRender(const std::function<void()>& func);
+	
 	/// set optional nanovg render function
 	void SetNanoVGRender(const std::function<void(NVGcontext *)> & func);
 
@@ -74,9 +81,10 @@ private:
 	static void StaticMouseScrollCallback(GLFWwindow* win, float64 x, float64 y);
 
 	/// resize update
-	void Resize();
+	void Resize() const;
+	
 	/// title rename update
-	void Retitle(); 
+	void Retitle() const; 
 
 	static int32 WindowCount;
 
@@ -103,111 +111,67 @@ private:
 	NVGcontext * vg;
 };
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetSize(int32 width, int32 height)
+inline void Window::SetSize(int32 width, int32 height)
 {
 	this->width = width;
 	this->height = height;
-	if (nullptr != this->window) this->Resize();
+	if (nullptr != this->window) 
+		this->Resize();
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::GetSize(int32 & width, int32 & height)
+inline void Window::GetSize(int32 & width, int32 & height) const
 {
 	width = this->width;
 	height = this->height;
-
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetTitle(const std::string& title)
+inline float Window::GetHeight() const { return this->height; }
+inline float Window::GetWidth() const { return this->width; }
+
+inline void Window::SetTitle(const std::string& title)
 {
 	this->title = title;
-	if (nullptr != this->window) this->Retitle();
+	if (nullptr != this->window) 
+		this->Retitle();
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline const bool
-Window::IsOpen() const
+inline bool Window::IsOpen() const
 {
 	return nullptr != this->window;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetKeyPressFunction(const std::function<void(int32, int32, int32, int32)>& func)
+inline void Window::SetKeyPressFunction(const std::function<void(int32, int32, int32, int32)>& func)
 {
 	this->keyPressCallback = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetMousePressFunction(const std::function<void(int32, int32, int32)>& func)
+inline void Window::SetMousePressFunction(const std::function<void(int32, int32, int32)>& func)
 {
 	this->mousePressCallback = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetMouseMoveFunction(const std::function<void(float64, float64)>& func)
+inline void Window::SetMouseMoveFunction(const std::function<void(float64, float64)>& func)
 {
 	this->mouseMoveCallback = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetMouseEnterLeaveFunction(const std::function<void(bool)>& func)
+inline void Window::SetMouseEnterLeaveFunction(const std::function<void(bool)>& func)
 {
 	this->mouseLeaveEnterCallback = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetMouseScrollFunction(const std::function<void(float64, float64)>& func)
+inline void Window::SetMouseScrollFunction(const std::function<void(float64, float64)>& func)
 {
 	this->mouseScrollCallback = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetUiRender(const std::function<void()>& func)
+inline void Window::SetUiRender(const std::function<void()>& func)
 {
 	this->uiFunc = func;
 }
 
-//------------------------------------------------------------------------------
-/**
-*/
-inline void
-Window::SetNanoVGRender(const std::function<void(NVGcontext *)> & func)
+inline void Window::SetNanoVGRender(const std::function<void(NVGcontext *)> & func)
 {
 	this->nanoFunc = func;
 }
-
-
-
-
-} // namespace Display
+} 
