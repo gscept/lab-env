@@ -111,7 +111,10 @@ Window::SetSize(int32 width, int32 height)
 {
 	this->width = width;
 	this->height = height;
-	if (nullptr != this->window) this->Resize();
+	if (nullptr != this->window)
+	{
+		this->Resize();
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -132,7 +135,10 @@ inline void
 Window::SetTitle(const std::string& title)
 {
 	this->title = title;
-	if (nullptr != this->window) this->Retitle();
+	if (nullptr != this->window)
+	{
+		this->Retitle();
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -206,5 +212,4 @@ Window::SetNanoVGRender(const std::function<void(NVGcontext *)> & func)
 {
 	this->nanoFunc = func;
 }
-
 } // namespace Display

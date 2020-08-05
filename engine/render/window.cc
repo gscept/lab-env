@@ -13,12 +13,12 @@
 namespace Display
 {
 
-
 #ifdef __WIN32__
 #define APICALLTYPE __stdcall
 #else
 #define APICALLTYPE
 #endif
+
 //------------------------------------------------------------------------------
 /**
 */
@@ -92,7 +92,10 @@ Window::StaticKeyPressCallback(GLFWwindow* win, int32 key, int32 scancode, int32
 	{
 		ImGui_ImplGlfwGL3_KeyCallback(win, key, scancode, action, mods);
 	}
-	else if (nullptr != window->keyPressCallback) window->keyPressCallback(key, scancode, action, mods);
+	else if (nullptr != window->keyPressCallback)
+	{
+		window->keyPressCallback(key, scancode, action, mods);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -106,7 +109,10 @@ Window::StaticMousePressCallback(GLFWwindow* win, int32 button, int32 action, in
 	{
 		ImGui_ImplGlfwGL3_MouseButtonCallback(win, button, action, mods);
 	}
-	else if (nullptr != window->mousePressCallback) window->mousePressCallback(button, action, mods);
+	else if (nullptr != window->mousePressCallback)
+	{
+		window->mousePressCallback(button, action, mods);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -116,7 +122,10 @@ void
 Window::StaticMouseMoveCallback(GLFWwindow* win, float64 x, float64 y)
 {
 	Window* window = (Window*)glfwGetWindowUserPointer(win);
-	if (nullptr != window->mouseMoveCallback) window->mouseMoveCallback(x, y);
+	if (nullptr != window->mouseMoveCallback)
+	{
+		window->mouseMoveCallback(x, y);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -126,7 +135,10 @@ void
 Window::StaticMouseEnterLeaveCallback(GLFWwindow* win, int32 mode)
 {
 	Window* window = (Window*)glfwGetWindowUserPointer(win);
-	if (nullptr != window->mouseLeaveEnterCallback) window->mouseLeaveEnterCallback(mode == 0);
+	if (nullptr != window->mouseLeaveEnterCallback)
+	{
+		window->mouseLeaveEnterCallback(mode == 0);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -140,7 +152,10 @@ Window::StaticMouseScrollCallback(GLFWwindow* win, float64 x, float64 y)
 	{
 		ImGui_ImplGlfwGL3_ScrollCallback(win, x, y);
 	}
-	else if (nullptr != window->mouseScrollCallback) window->mouseScrollCallback(x, y);
+	else if (nullptr != window->mouseScrollCallback)
+	{
+		window->mouseScrollCallback(x, y);
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -164,7 +179,10 @@ Window::Resize()
 void
 Window::Retitle()
 {
-	if (nullptr != this->window) glfwSetWindowTitle(this->window, this->title.c_str());
+	if (nullptr != this->window)
+	{
+		glfwSetWindowTitle(this->window, this->title.c_str());
+	}
 }
 
 //------------------------------------------------------------------------------
@@ -175,7 +193,10 @@ Window::Open()
 {
 	if (Window::WindowCount == 0)
 	{
-		if (!glfwInit()) return false;
+		if (!glfwInit())
+		{
+			return false;
+		}
 	}
 
 	// setup window
@@ -249,7 +270,10 @@ Window::Open()
 void
 Window::Close()
 {
-	if (nullptr != this->window) glfwDestroyWindow(this->window);
+	if (nullptr != this->window)
+	{
+		glfwDestroyWindow(this->window);
+	}
 	this->window = nullptr;
 	Window::WindowCount--;
 	if (Window::WindowCount == 0)
@@ -304,5 +328,4 @@ Window::SwapBuffers()
 		glfwSwapBuffers(this->window);
 	}
 }
-
 } // namespace Display

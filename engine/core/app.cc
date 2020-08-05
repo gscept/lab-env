@@ -64,5 +64,4 @@ App::Exit()
 {
 	
 }
-
 } // namespace Application
