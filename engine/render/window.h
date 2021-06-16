@@ -72,6 +72,8 @@ private:
 	static void StaticMouseEnterLeaveCallback(GLFWwindow* win, int32 mode);
 	/// static mouse scroll callback
 	static void StaticMouseScrollCallback(GLFWwindow* win, float64 x, float64 y);
+	/// static mouse scroll callback
+	static void StaticCloseCallback(GLFWwindow* win);
 
 	/// resize update
 	void Resize();

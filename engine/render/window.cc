@@ -162,6 +162,16 @@ Window::StaticMouseScrollCallback(GLFWwindow* win, float64 x, float64 y)
 /**
 */
 void
+Window::StaticCloseCallback(GLFWwindow* win)
+{
+	Window* window = (Window*)glfwGetWindowUserPointer(win);
+	window->Close();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 Window::Resize()
 {
 	if (nullptr != this->window)
@@ -251,6 +261,7 @@ Window::Open()
 	glfwSetCursorPosCallback(this->window, Window::StaticMouseMoveCallback);
 	glfwSetCursorEnterCallback(this->window, Window::StaticMouseEnterLeaveCallback);
 	glfwSetScrollCallback(this->window, Window::StaticMouseScrollCallback);
+	glfwSetWindowCloseCallback(this->window, Window::StaticCloseCallback);
 	// setup imgui implementation
     ImGui::CreateContext();
 	ImGui_ImplGlfwGL3_Init(this->window, false);

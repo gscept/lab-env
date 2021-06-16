@@ -1,7 +1,8 @@
 #--------------------------------------------------------------------------
 # gscept laboration environment
 #--------------------------------------------------------------------------
-PROJECT(gscept_lab_env)
+cmake_policy(SET CMP0048 NEW) # set policy for older versions
+PROJECT(gscept_lab_env VERSION 1.0)
 CMAKE_MINIMUM_REQUIRED(VERSION 3.2)
 
 MACRO(TARGET_PCH target path)
@@ -18,7 +19,7 @@ ENDIF()
 ENDMACRO(TARGET_PCH)
 
 IF(CMAKE_COMPILER_IS_GNUCXX)
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++14")
 ENDIF()
 
 IF(MSVC)
