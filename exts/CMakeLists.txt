@@ -17,11 +17,6 @@ ADD_SUBDIRECTORY(glfw)
 SET_TARGET_PROPERTIES(glfw PROPERTIES FOLDER "exts/glfw")
 TARGET_INCLUDE_DIRECTORIES(exts INTERFACE glfw/include)
 
-ADD_LIBRARY(nanovg STATIC nanovg/src/nanovg.c nanovg/src/nanovg.h nanovg/src/nanovg_gl.h nanovg/src/nanovg_gl_utils.h)
-TARGET_LINK_LIBRARIES(nanovg PUBLIC exts)
-TARGET_INCLUDE_DIRECTORIES(nanovg PUBLIC nanovg/src)
-SET_TARGET_PROPERTIES(nanovg PROPERTIES FOLDER "exts/nanovg")
-
 ADD_LIBRARY(imgui STATIC imgui/imgui.cpp imgui/imgui_demo.cpp imgui/imgui_draw.cpp 
 			imgui/imgui.h imgui/imgui_internal.h 
 			imgui/stb_rect_pack.h imgui/stb_textedit.h imgui/stb_truetype.h 
@@ -32,4 +27,4 @@ TARGET_LINK_LIBRARIES(imgui PUBLIC exts)
 TARGET_INCLUDE_DIRECTORIES(imgui PUBLIC imgui imgui/examples/opengl3_example)
 SET_TARGET_PROPERTIES(imgui PROPERTIES FOLDER "exts/imgui")
 
-TARGET_LINK_LIBRARIES(exts INTERFACE imgui nanovg)
+TARGET_LINK_LIBRARIES(exts INTERFACE imgui)
