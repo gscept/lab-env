@@ -221,7 +221,12 @@ Window::Open()
 
 	// open window
 	this->window = glfwCreateWindow(this->width, this->height, this->title.c_str(), nullptr, nullptr);
-	assert(this->window != NULL);
+	if (this->window == NULL)
+	{
+		printf("[ERROR]: Could not create GLFW window!\n");
+		glfwTerminate();
+		return false;
+	}
 	glfwMakeContextCurrent(this->window);
 
 	if (nullptr != this->window && WindowCount == 0)
@@ -230,9 +235,10 @@ Window::Open()
 		assert(res == GLEW_OK);
 		if (!(GLEW_VERSION_4_0))
 		{
-			printf("[WARNING]: OpenGL 4.0+ is not supported on this hardware!\n");
+			printf("[ERROR]: OpenGL 4.0+ is not supported on this hardware!\n");
 			glfwDestroyWindow(this->window);
 			this->window = nullptr;
+			glfwTerminate();
 			return false;
 		}
 
