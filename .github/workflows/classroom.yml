@@ -18,7 +18,7 @@
             run: >
               curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z ;
               7z.exe x mesa.7z ;
-              New-Item -ItemType SymbolicLink -Path . -name opengl32.dll -value x64/opengl32.dll
+              New-Item -ItemType SymbolicLink -Path . -name opengl32.dll -value x64/opengl32.dll ;
               New-Item -ItemType SymbolicLink -Path . -name libglapi.dll -value x64\libglapi.dll
             working-directory: .\build\CI\libs
 
