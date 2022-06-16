@@ -15,5 +15,6 @@ main(int argc, const char** argv)
 		app.Close();
 	}
 	app.Exit();
-	
+
+	return app.ExitCode();
 }

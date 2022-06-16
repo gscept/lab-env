@@ -8,12 +8,16 @@
         runs-on: windows-latest
         steps:
           - uses: actions/checkout@v2
+          
           - name: Generate Project Structure
             shell: powershell
             run: mkdir ./build/CI/libs
+
           - name: Generate Project
             shell: powershell
-            run: cmake -S ./ -B ./build
+            run: cmake -S ./ -B ./build -DCI_MODE=ON
+          
           - name: Build ALL
             shell: powershell
             run: cmake --build ./build
+          

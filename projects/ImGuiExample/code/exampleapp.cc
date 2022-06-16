@@ -52,6 +52,18 @@ ImGuiExampleApp::~ImGuiExampleApp()
 //------------------------------------------------------------------------------
 /**
 */
+void
+ImGuiExampleApp::Close()
+{
+	if (this->window->IsOpen())
+		this->window->Close();
+
+	Core::App::Close();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
 bool
 ImGuiExampleApp::Open()
 {
@@ -132,6 +144,12 @@ ImGuiExampleApp::Run()
 		
 		// transfer new frame to window
 		this->window->SwapBuffers();
+
+#ifdef CI_TEST
+		// if we're running CI, we want to return and exit the application after one frame
+		// break the loop and hopefully exit gracefully
+		break;
+#endif
 	}
 }
 

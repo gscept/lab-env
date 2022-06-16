@@ -21,6 +21,8 @@ public:
 
 	/// open app
 	bool Open();
+	/// clone app
+	void Close();
 	/// run app
 	void Run();
 private:
