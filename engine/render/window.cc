@@ -221,6 +221,7 @@ Window::Open()
 
 	// open window
 	this->window = glfwCreateWindow(this->width, this->height, this->title.c_str(), nullptr, nullptr);
+	assert(this->window != NULL);
 	glfwMakeContextCurrent(this->window);
 
 	if (nullptr != this->window && WindowCount == 0)
