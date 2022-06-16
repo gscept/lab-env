@@ -13,15 +13,6 @@
             shell: powershell
             run: mkdir ./build/CI/libs
 
-          - name: Install Mesa
-            shell: powershell
-            run: >
-              curl.exe -L --output mesa.7z --url https://github.com/pal1000/mesa-dist-win/releases/download/20.3.2/mesa3d-20.3.2-release-msvc.7z ;
-              7z.exe x mesa.7z ;
-              New-Item -ItemType SymbolicLink -Path . -name opengl32.dll -value x64/opengl32.dll ;
-              New-Item -ItemType SymbolicLink -Path . -name libglapi.dll -value x64\libglapi.dll
-            working-directory: .\build\CI\libs
-
           - name: Generate Project
             shell: powershell
             run: cmake -S ./ -B ./build
@@ -30,24 +21,3 @@
             shell: powershell
             run: cmake --build ./build
           
-          - name: Run ALL
-            shell: powershell
-            run: >
-              Get-ChildItem './bin' -Filter *.exe |
-                ForEach {
-                 Write-Host "EXECUTING $_..."
-                 Write-Host "---------------------------"
-                 &$_.Fullname | Foreach-Object{ Write-Host $_ }
-                 Write-Host "----- EXITED $_" 
-                 %{
-                   if($LASTEXITCODE -eq 0)
-                   {
-                     Write-Host "$_ exited without errors (code 0)."
-                   }
-                   else
-                   {
-                     #Write-Error -Message "$_ exited with errorcode $LASTEXITCODE." -Category OperationStopped -ErrorId $LASTEXITCODE
-                     [Console]::ForegroundColor = 'red' ; [Console]::Error.WriteLine("$_ exited with errorcode $LASTEXITCODE.") ; [Console]::ResetColor()
-                   }
-                 }
-               }
