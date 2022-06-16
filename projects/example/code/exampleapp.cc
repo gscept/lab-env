@@ -167,9 +167,6 @@ ExampleApp::Run()
 
 		this->window->SwapBuffers();
 
-		printf("FAILED\n");
-		this->SetExitCode(1);
-
 #ifdef CI_TEST
 		// if we're running CI, we want to return and exit the application after one frame
 		// break the loop and hopefully exit gracefully
