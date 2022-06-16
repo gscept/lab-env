@@ -26,8 +26,13 @@ public:
 	virtual void Close();
 	/// kill application
 	virtual void Exit();
+	/// set the exit code
+	void SetExitCode(int exitCode);
+	/// get the current exit code
+	int ExitCode();
 
 private:
 	bool isOpen;
+	int exitCode;
 };
 } // namespace App

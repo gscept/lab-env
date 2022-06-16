@@ -12,7 +12,8 @@ namespace Core
 /**
 */
 App::App() :
-	isOpen(false)
+	isOpen(false),
+	exitCode(0)
 {
 	// empty
 }
@@ -64,4 +65,24 @@ App::Exit()
 {
 	
 }
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
+App::SetExitCode(int exitCode)
+{
+	this->exitCode = exitCode;
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+int
+App::ExitCode()
+{
+	return this->exitCode;
+}
+
+
 } // namespace Application

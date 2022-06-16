@@ -21,6 +21,8 @@ public:
 
 	/// open app
 	bool Open();
+	/// close app
+	void Close();
 	/// run app
 	void Run();
 private:

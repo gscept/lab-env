@@ -136,6 +136,18 @@ ExampleApp::Open()
 /**
 */
 void
+ExampleApp::Close()
+{
+	if (this->window->IsOpen())
+		this->window->Close();
+
+	Core::App::Close();
+}
+
+//------------------------------------------------------------------------------
+/**
+*/
+void
 ExampleApp::Run()
 {
 	while (this->window->IsOpen())
@@ -154,6 +166,15 @@ ExampleApp::Run()
 		glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 		this->window->SwapBuffers();
+
+		printf("FAILED\n");
+		this->SetExitCode(1);
+
+#ifdef CI_TEST
+		// if we're running CI, we want to return and exit the application after one frame
+		// break the loop and hopefully exit gracefully
+		break;
+#endif
 	}
 }
 
