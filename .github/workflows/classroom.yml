@@ -19,21 +19,22 @@
             run: cmake --build ./build
           - name: Run ALL
             shell: powershell
-            run: Get-ChildItem './bin' -Filter *.exe |
-                 ForEach {
-                   Write-Host "EXECUTING $_..."
-                   Write-Host "---------------------------"
-                   &$_.Fullname | Foreach-Object{ Write-Host $_ }
-                   Write-Host "----- EXITED $_" 
-                   %{
-                     if($LASTEXITCODE -eq 0)
-                     {
-                       Write-Host "$_ exited without errors (code 0)."
-                     }
-                     else
-                     {
-                       #Write-Error -Message "$_ exited with errorcode $LASTEXITCODE." -Category OperationStopped -ErrorId $LASTEXITCODE
-                       [Console]::ForegroundColor = 'red' ; [Console]::Error.WriteLine("$_ exited with errorcode $LASTEXITCODE.") ; [Console]::ResetColor()
-                     }
+            run: >
+              Get-ChildItem './bin' -Filter *.exe |
+                ForEach {
+                 Write-Host "EXECUTING $_..."
+                 Write-Host "---------------------------"
+                 &$_.Fullname | Foreach-Object{ Write-Host $_ }
+                 Write-Host "----- EXITED $_" 
+                 %{
+                   if($LASTEXITCODE -eq 0)
+                   {
+                     Write-Host "$_ exited without errors (code 0)."
+                   }
+                   else
+                   {
+                     #Write-Error -Message "$_ exited with errorcode $LASTEXITCODE." -Category OperationStopped -ErrorId $LASTEXITCODE
+                     [Console]::ForegroundColor = 'red' ; [Console]::Error.WriteLine("$_ exited with errorcode $LASTEXITCODE.") ; [Console]::ResetColor()
                    }
                  }
+               }
