@@ -4,7 +4,10 @@
 
 SET(files_render_display
 	window.h
-	window.cc)
+	window.cc
+	grid.h
+	grid.cc
+	)
 SOURCE_GROUP("display" FILES ${files_render_display})
 
 
