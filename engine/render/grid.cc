@@ -100,6 +100,12 @@ Grid::Grid() : lineBuffer(0)
 	glGenBuffers(1, &this->lineBuffer);
 	glBindBuffer(GL_ARRAY_BUFFER, this->lineBuffer);
 	glBufferData(GL_ARRAY_BUFFER, buf.size() * sizeof(float32), buf.data(), GL_STATIC_DRAW);
+	
+	glGenVertexArrays(1, &this->vao);
+	glBindVertexArray(this->vao);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float32) * 4, NULL);
+	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	
 }
@@ -119,14 +125,11 @@ Grid::~Grid()
 void
 Grid::Draw(float const* const viewProjection)
 {
-	glBindBuffer(GL_ARRAY_BUFFER, this->lineBuffer);
 	glUseProgram(this->program);
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(float32) * 4, NULL);
+	glBindVertexArray(this->vao);
 	glUniformMatrix4fv(0, 1, false, viewProjection);
 	glDrawArrays(GL_LINES, 0, gridSize * 2 * 2);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDisableVertexAttribArray(0);
+	glBindVertexArray(0);
 
 }
 

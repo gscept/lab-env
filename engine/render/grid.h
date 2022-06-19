@@ -23,6 +23,7 @@ public:
     
 private:
     GLuint program;
+    GLuint vao;
     GLuint lineBuffer;
 };
 
